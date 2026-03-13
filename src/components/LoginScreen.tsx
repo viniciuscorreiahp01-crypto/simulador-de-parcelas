@@ -12,7 +12,10 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
 
   const handleLogin = (e: FormEvent) => {
     e.preventDefault();
-    if (login === MOCK_LOGIN && senha === MOCK_SENHA) {
+    const cleanLogin = login.trim().toLowerCase();
+    const cleanSenha = senha.trim();
+
+    if (cleanLogin === MOCK_LOGIN && cleanSenha === MOCK_SENHA) {
       localStorage.setItem('sf_session', 'active');
       onLogin();
     } else {
@@ -47,6 +50,8 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
                 onChange={(e) => setLogin(e.target.value)}
                 placeholder="Ex: admin"
                 className="input-field pl-12 bg-black/40 border-zinc-800 text-white w-full py-4 rounded-xl px-4 outline-none focus:border-emerald-500/50 transition-all font-mono"
+                autoCapitalize="none"
+                autoCorrect="off"
                 required
               />
             </div>
@@ -62,6 +67,8 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
                 onChange={(e) => setSenha(e.target.value)}
                 placeholder="••••••"
                 className="input-field pl-12 bg-black/40 border-zinc-800 text-white w-full py-4 rounded-xl px-4 outline-none focus:border-emerald-500/50 transition-all font-mono"
+                autoCapitalize="none"
+                autoCorrect="off"
                 required
               />
             </div>
