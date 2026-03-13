@@ -1,0 +1,5 @@
+{
+  "name": "Simulador de Parcelas",
+  "description": "Ferramenta de simulação de empréstimos com suporte a múltiplas parcelas e formatação para WhatsApp.",
+  "requestFramePermissions": []
+}

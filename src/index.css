@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-bg: #09090b; /* Zinc 950 */
+  --color-brand-card: #18181b; /* Zinc 900 */
+  --color-brand-border: rgba(255, 255, 255, 0.06);
+  --color-brand-accent: #10b981; /* Emerald 500 */
+}
+
+@layer base {
+  :root {
+    --bg: #09090b;
+    --card: #18181b;
+    --border: rgba(255, 255, 255, 0.06);
+  }
+
+  .light {
+    --bg: #fafafa;
+    --card: #ffffff;
+    --border: rgba(0, 0, 0, 0.08);
+  }
+
+  body {
+    @apply transition-colors duration-300 antialiased;
+    background-color: var(--bg);
+    color: theme('colors.zinc.100');
+    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
+    background-image: 
+      radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+  }
+
+  .light body {
+    color: theme('colors.zinc.900');
+    background-image: 
+      radial-gradient(circle at 2px 2px, rgba(0,0,0,0.02) 1px, transparent 0);
+  }
+}
+
+@layer components {
+  .glass-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    @apply shadow-2xl backdrop-blur-md;
+  }
+  
+  .input-field {
+    @apply w-full bg-zinc-950/50 border border-white/5 rounded-xl p-4 outline-none 
+           focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 
+           transition-all duration-200 placeholder:text-zinc-600 font-medium;
+  }
+
+  .input-field:hover {
+    @apply border-emerald-500/20 bg-zinc-900/60;
+  }
+
+  .light .input-field {
+    @apply bg-zinc-100/50 border-black/5 placeholder:text-zinc-400;
+  }
+
+  .stat-card {
+    @apply p-5 rounded-2xl border border-white/5 bg-zinc-900/50;
+  }
+
+  .light .stat-card {
+    @apply bg-zinc-50 border-black/5;
+  }
+
+  /* Style native date picker icon */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    @apply cursor-pointer p-1 rounded-md transition-all;
+    filter: invert(1); /* Makes it white by default */
+  }
+
+  .light input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0); /* Keeps it dark in light mode */
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    background-color: rgba(16, 185, 129, 0.2); /* emerald-500/20 */
+    /* Force green color using filters on hover */
+    filter: invert(58%) sepia(87%) saturate(444%) hue-rotate(112deg) brightness(92%) contrast(88%);
+  }
+
+  input[type="date"] {
+    accent-color: #10b981; /* emerald-500 */
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-800 rounded-full;
+}
+.light ::-webkit-scrollbar-thumb {
+  @apply bg-zinc-300;
+}
+@layer utilities {
+  @media print {
+    body {
+      background: white !important;
+      color: black !important;
+      background-image: none !important;
+    }
+    
+    .glass-card {
+      background: white !important;
+      border: 1px solid #eee !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+    }
+
+    textarea {
+      border: none !important;
+      overflow: visible !important;
+      height: auto !important;
+      color: black !important;
+    }
+
+    /* Prevent breaking inside critical cards */
+    .stat-card,
+    .glass-card {
+      break-inside: avoid;
+    }
+
+    /* Force background colors on print if needed */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }
+}

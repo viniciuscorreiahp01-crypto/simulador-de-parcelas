@@ -1,0 +1,17 @@
+{
+  "name": "Simulador de Parcelas",
+  "short_name": "Simulador de Parcelas",
+  "description": "Ferramenta de simulação de empréstimos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f17",
+  "theme_color": "#0b0f17",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
