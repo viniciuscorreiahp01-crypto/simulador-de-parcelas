@@ -4,13 +4,13 @@
  */
 
 import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
-import { 
-  Moon, 
-  Sun, 
-  Calculator, 
-  Copy, 
-  Check, 
-  Smartphone, 
+import {
+  Moon,
+  Sun,
+  Calculator,
+  Copy,
+  Check,
+  Smartphone,
   Zap,
   TrendingUp,
   Wallet,
@@ -21,6 +21,7 @@ import {
   Lock,
   LogOut
 } from 'lucide-react';
+import { supabase } from './utils/supabase';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   toNumberBR, 
@@ -170,6 +171,35 @@ export default function App() {
     setKpis({ total: r.total, lucro: r.lucro });
     setSelectedOption(r);
     setSimulationStatus({ message: `Proposta de ${r.n}x gerada! ✅`, isError: false });
+
+    // Save to Supabase
+    saveToSupabase(principal, taxa, r, texto);
+  };
+
+  const saveToSupabase = async (amount: number, rate: number, result: SimulationResult, text: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { error } = await supabase
+        .from('simulations')
+        .insert([{
+          user_id: user.id,
+          client_name: nome,
+          loan_amount: amount,
+          interest_rate: rate,
+          installments: result.n,
+          installment_value: result.parcela,
+          total_receivable: result.total,
+          estimated_profit: result.lucro,
+          first_payment_date: dataPrimeiroPagamento,
+          formatted_text: text
+        }]);
+
+      if (error) console.error('Erro ao salvar no Supabase:', error);
+    } catch (err) {
+      console.error('Erro no fluxo de salvamento:', err);
+    }
   };
 
   const handleCopiar = async () => {
@@ -230,7 +260,7 @@ export default function App() {
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-black tracking-tighter">Simulador de Parcelas</h1>
-              <p className={`text-xs font-medium uppercase tracking-widest mt-1 ${simulationStatus.isError ? 'text-red-400' : 'text-emerald-500/60'}`}>
+              <p className={`text-xs font-medium uppercase tracking-widest mt-1 ${simulationStatus.isError ? 'text-emerald-400' : 'text-emerald-500/60'}`}>
                 {simulationStatus.message}
               </p>
             </div>
@@ -239,7 +269,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <button 
               onClick={handleLogout}
-              className="p-3.5 rounded-xl glass-card hover:scale-110 transition-all active:scale-95 group text-zinc-500 hover:text-red-400 print:hidden"
+              className="p-3.5 rounded-xl glass-card hover:scale-110 transition-all active:scale-95 group text-zinc-500 hover:text-emerald-400 print:hidden"
               title="Sair"
             >
               <LogOut size={20} />
