@@ -21,7 +21,6 @@ import {
   Lock,
   LogOut
 } from 'lucide-react';
-import { supabase } from './utils/supabase';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   toNumberBR, 
@@ -171,36 +170,9 @@ export default function App() {
     setKpis({ total: r.total, lucro: r.lucro });
     setSelectedOption(r);
     setSimulationStatus({ message: `Proposta de ${r.n}x gerada! ✅`, isError: false });
-
-    // Save to Supabase
-    saveToSupabase(principal, taxa, r, texto);
   };
 
-  const saveToSupabase = async (amount: number, rate: number, result: SimulationResult, text: string) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
 
-      const { error } = await supabase
-        .from('simulations')
-        .insert([{
-          user_id: user.id,
-          client_name: nome,
-          loan_amount: amount,
-          interest_rate: rate,
-          installments: result.n,
-          installment_value: result.parcela,
-          total_receivable: result.total,
-          estimated_profit: result.lucro,
-          first_payment_date: dataPrimeiroPagamento,
-          formatted_text: text
-        }]);
-
-      if (error) console.error('Erro ao salvar no Supabase:', error);
-    } catch (err) {
-      console.error('Erro no fluxo de salvamento:', err);
-    }
-  };
 
   const handleCopiar = async () => {
     if (!resultado.trim()) return;
